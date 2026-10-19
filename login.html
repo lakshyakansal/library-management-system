@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Sign in · {{ app_title }}{% endblock %}
+{% block public_content %}
+<div class="login-page">
+  <div class="login-art"><a class="brand brand-light" href="#"><span class="brand-icon">S</span><span>ShelfWise<small>LIBRARY MANAGEMENT</small></span></a><div class="art-copy"><div class="eyebrow">YOUR LIBRARY, IN CONTROL</div><h1>Every book has<br>a <em>story.</em></h1><p>Keep your collection organized, your members connected, and every checkout on track.</p><div class="book-stack"><div class="book book-one"></div><div class="book book-two"></div><div class="book book-three"></div><div class="book book-four"></div><div class="book book-five"></div></div></div><div class="art-foot">A calmer way to manage your library.</div></div>
+  <div class="login-panel"><div class="login-box"><div class="mobile-mark">SHELFWISE / ADMIN</div><div class="eyebrow">WELCOME BACK</div><h2>Sign in to your workspace</h2><p class="muted">Enter your administrator credentials to continue.</p>
+  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+  <form method="post" action="/login" class="stack-form">
+    <label>Username<input name="username" autocomplete="username" required placeholder="Enter your username"></label>
+    <label>Password<input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password"></label>
+    <button class="btn btn-primary btn-full" type="submit">Sign in <span>→</span></button>
+  </form><div class="login-note"><span>🔒</span> Secure administrator access</div></div><div class="login-copyright">© ShelfWise Library Management</div></div>
+</div>
+{% endblock %}

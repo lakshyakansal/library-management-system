@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Issue & returns · {{ app_title }}{% endblock %}
+{% block crumb %}Issue & returns{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">BORROWING DESK</div><h1>Issue & returns</h1><p>Track borrowed books, due dates, and completed returns.</p></div></div>
+{% if message %}<div class="alert info">{{ message }}</div>{% endif %}
+<div class="two-column loans-layout">
+  <section class="panel form-panel"><div class="panel-heading"><div><h3>Issue a book</h3><p>Choose a book, a member, and a due date.</p></div><span class="panel-symbol">↗</span></div>
+  {% if books and members %}<form method="post" action="/loans/issue" class="stack-form">
+    <label>Select book<select name="book_id" required><option value="">Choose an available book</option>{% for book in books %}<option value="{{ book.id }}">{{ book.title }} — {{ book.available_copies }} available</option>{% endfor %}</select></label>
+    <label>Select member<select name="member_id" required><option value="">Choose a member</option>{% for member in members %}<option value="{{ member.id }}">{{ member.name }} ({{ member.email }})</option>{% endfor %}</select></label>
+    <label>Return due date<input type="date" name="due_on" min="{{ today.isoformat() }}" required></label>
+    <button class="btn btn-primary btn-full" type="submit">Issue book <span>→</span></button>
+  </form>{% else %}<div class="empty-inline"><strong>Almost ready to issue</strong><p>You need at least one member and one available book.</p><div class="inline-links"><a href="/books">＋ Add a book</a><a href="/members">＋ Add a member</a></div></div>{% endif %}
+  <div class="tip-box"><span>✦</span><p><strong>Tip</strong><br>Returning a book automatically increases the available-copy count.</p></div>
+  </section>
+  <section class="panel catalogue-panel"><div class="panel-heading"><div><h3>Loan records</h3><p>Follow every checkout and return.</p></div></div>
+    <div class="tabs"><a class="{% if status == 'active' %}selected{% endif %}" href="/loans?status=active">Active loans</a><a class="{% if status == 'returned' %}selected{% endif %}" href="/loans?status=returned">Returned</a><a class="{% if status == 'all' %}selected{% endif %}" href="/loans?status=all">All records</a></div>
+    {% if rows %}<div class="table-wrap"><table><thead><tr><th>BOOK / MEMBER</th><th>DUE DATE</th><th>STATUS / ACTION</th></tr></thead><tbody>{% for row in rows %}<tr><td><div class="book-cell"><span class="mini-book">▤</span><div><strong>{{ row.book.title }}</strong><small>{{ row.member.name }}</small></div></div></td><td>{{ row.loan.due_on.strftime('%d %b %Y') }}{% if row.loan.returned_on %}<small class="subline">Returned {{ row.loan.returned_on.strftime('%d %b %Y') }}</small>{% endif %}</td><td>{% if row.loan.returned_on %}<span class="status status-returned">Returned</span>{% elif row.overdue %}<span class="status status-overdue">Overdue</span><form method="post" action="/loans/{{ row.loan.id }}/return"><button class="small-action" type="submit">Mark returned</button></form>{% else %}<span class="status status-active">Borrowed</span><form method="post" action="/loans/{{ row.loan.id }}/return"><button class="small-action" type="submit">Mark returned</button></form>{% endif %}</td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><span>↔</span><strong>No loan records</strong><p>Records will appear here after a book is issued.</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}

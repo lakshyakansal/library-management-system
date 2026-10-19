@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Overview · {{ app_title }}{% endblock %}
+{% block crumb %}Overview{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR LIBRARY AT A GLANCE</div><h1>Good to see you, Admin <span class="wave">✦</span></h1><p>Here's what's happening in your library today.</p></div><a class="btn btn-primary" href="/loans">＋ Issue a book</a></div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-top"><span class="stat-icon purple">▤</span><span class="stat-label">BOOK TITLES</span></div><div class="stat-value">{{ titles_count }}</div><div class="stat-foot">Unique titles in catalogue</div></div>
+  <div class="stat-card"><div class="stat-top"><span class="stat-icon blue">▥</span><span class="stat-label">TOTAL COPIES</span></div><div class="stat-value">{{ total_copies }}</div><div class="stat-foot"><b>{{ available_copies }}</b> currently available</div></div>
+  <div class="stat-card"><div class="stat-top"><span class="stat-icon green">♙</span><span class="stat-label">MEMBERS</span></div><div class="stat-value">{{ members_count }}</div><div class="stat-foot">Registered library members</div></div>
+  <div class="stat-card"><div class="stat-top"><span class="stat-icon orange">↗</span><span class="stat-label">ACTIVE LOANS</span></div><div class="stat-value">{{ active_loans }}</div><div class="stat-foot">{% if overdue_count %}<span class="danger-text">{{ overdue_count }} overdue</span>{% else %}All loans within due date{% endif %}</div></div>
+</div>
+<div class="dashboard-grid">
+  <section class="panel"><div class="panel-heading"><div><h3>Currently borrowed</h3><p>Books that haven't been returned yet</p></div><a class="text-link" href="/loans">View all →</a></div>
+    {% if recent_rows %}<div class="table-wrap"><table><thead><tr><th>BOOK / MEMBER</th><th>DUE DATE</th><th>STATUS</th></tr></thead><tbody>{% for row in recent_rows %}<tr><td><div class="book-cell"><span class="mini-book">▤</span><div><strong>{{ row.book.title }}</strong><small>{{ row.member.name }}</small></div></div></td><td>{{ row.loan.due_on.strftime('%d %b %Y') }}</td><td>{% if row.loan.due_on < today %}<span class="status status-overdue">Overdue</span>{% else %}<span class="status status-active">Borrowed</span>{% endif %}</td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><span>▤</span><strong>No active loans yet</strong><p>When you issue a book, it will show up here.</p><a class="btn btn-secondary" href="/loans">Issue first book</a></div>{% endif %}
+  </section>
+  <section class="panel quick-panel"><div class="panel-heading"><div><h3>Quick actions</h3><p>Common tasks, right at your fingertips</p></div></div>
+    <a class="quick-action" href="/books"><span class="quick-icon purple">＋</span><span><strong>Add a book</strong><small>Grow your collection</small></span><b>→</b></a>
+    <a class="quick-action" href="/members"><span class="quick-icon green">♙</span><span><strong>Register a member</strong><small>Add a new library member</small></span><b>→</b></a>
+    <a class="quick-action" href="/loans"><span class="quick-icon orange">↔</span><span><strong>Manage borrowing</strong><small>Issue or return books</small></span><b>→</b></a>
+    <div class="availability-card"><div class="availability-head"><span>Collection availability</span><strong>{% if total_copies %}{{ ((available_copies / total_copies) * 100)|round|int }}%{% else %}0%{% endif %}</strong></div><div class="progress"><span style="width:{% if total_copies %}{{ (available_copies / total_copies) * 100 }}{% else %}0{% endif %}%"></span></div><p>{{ available_copies }} of {{ total_copies }} copies are ready to borrow.</p></div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Books · {{ app_title }}{% endblock %}
+{% block crumb %}Books{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR COLLECTION</div><h1>Books <span class="count-chip">{{ books|length }}</span></h1><p>Manage your catalogue and keep track of available copies.</p></div></div>
+{% if message %}<div class="alert info">{{ message }}</div>{% endif %}
+<div class="two-column">
+  <section class="panel form-panel"><div class="panel-heading"><div><h3>Add a new book</h3><p>Enter the details below to add a title.</p></div><span class="panel-symbol">＋</span></div>
+  <form method="post" action="/books/add" class="stack-form">
+    <label>Book title<input name="title" required maxlength="200" placeholder="e.g. The Alchemist"></label>
+    <label>Author<input name="author" required maxlength="150" placeholder="e.g. Paulo Coelho"></label>
+    <div class="form-row"><label>ISBN <span class="optional">(optional)</span><input name="isbn" maxlength="40" placeholder="978-..."></label><label>Category<input name="category" maxlength="100" placeholder="Fiction"></label></div>
+    <label>Total copies<input type="number" name="total_copies" min="1" max="10000" value="1" required></label>
+    <button class="btn btn-primary btn-full" type="submit">＋ Add book to catalogue</button>
+  </form></section>
+  <section class="panel catalogue-panel"><div class="panel-heading"><div><h3>Book catalogue</h3><p>Search and manage your collection.</p></div></div>
+    <form class="search-form" method="get" action="/books"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search title, author, ISBN..."><button type="submit">Search</button>{% if q %}<a href="/books" class="clear-link">Clear</a>{% endif %}</form>
+    {% if books %}<div class="table-wrap"><table><thead><tr><th>BOOK DETAILS</th><th>AVAILABLE</th><th></th></tr></thead><tbody>{% for book in books %}<tr><td><div class="book-cell"><span class="mini-book">▤</span><div><strong>{{ book.title }}</strong><small>{{ book.author }} · {{ book.category }}{% if book.isbn %} · ISBN {{ book.isbn }}{% endif %}</small></div></div></td><td><span class="stock {% if book.available_copies == 0 %}stock-none{% endif %}">{{ book.available_copies }} / {{ book.total_copies }}</span></td><td><form method="post" action="/books/{{ book.id }}/delete" onsubmit="return confirm('Delete this book?')"><button class="icon-btn" title="Delete book" aria-label="Delete book">×</button></form></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><span>▤</span><strong>No books found</strong><p>Add a book or try a different search.</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}

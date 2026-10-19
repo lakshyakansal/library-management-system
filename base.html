@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ app_title }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if logged_in %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="/"><span class="brand-icon">S</span><span>ShelfWise<small>LIBRARY ADMIN</small></span></a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <a href="/" class="{% if request.url.path == '/' %}active{% endif %}"><span>◫</span> Overview</a>
+      <a href="/books" class="{% if request.url.path.startswith('/books') %}active{% endif %}"><span>▤</span> Books</a>
+      <a href="/members" class="{% if request.url.path.startswith('/members') %}active{% endif %}"><span>♙</span> Members</a>
+      <a href="/loans" class="{% if request.url.path.startswith('/loans') %}active{% endif %}"><span>↔</span> Issue & returns</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card"><div class="help-icon">✦</div><strong>Keep your library in sync</strong><p>Manage books and borrowing in one simple workspace.</p></div>
+      <form method="post" action="/logout"><button class="logout-btn" type="submit">↪ &nbsp; Sign out</button></form>
+    </div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><div class="mobile-brand">ShelfWise</div><div class="breadcrumb">Library workspace <span>/</span> <b>{% block crumb %}Overview{% endblock %}</b></div><div class="admin-pill"><span class="avatar">A</span><span>Administrator</span></div></header>
+    <div class="content">{% block content %}{% endblock %}</div>
+    <footer>© ShelfWise Library · Built for simpler library operations</footer>
+  </main>
+</div>
+{% else %}
+  {% block public_content %}{% endblock %}
+{% endif %}
+</body>
+</html>

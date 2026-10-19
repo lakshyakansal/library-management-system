@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Members · {{ app_title }}{% endblock %}
+{% block crumb %}Members{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR LIBRARY COMMUNITY</div><h1>Members <span class="count-chip">{{ members|length }}</span></h1><p>Keep member contact details organized in one place.</p></div></div>
+{% if message %}<div class="alert info">{{ message }}</div>{% endif %}
+<div class="two-column">
+  <section class="panel form-panel"><div class="panel-heading"><div><h3>Register a member</h3><p>Add someone to your library.</p></div><span class="panel-symbol">♙</span></div>
+  <form method="post" action="/members/add" class="stack-form">
+    <label>Full name<input name="name" required maxlength="150" placeholder="e.g. Aditi Sharma"></label>
+    <label>Email address<input name="email" type="email" required maxlength="200" placeholder="name@example.com"></label>
+    <label>Phone number <span class="optional">(optional)</span><input name="phone" maxlength="40" placeholder="+91 98765 43210"></label>
+    <button class="btn btn-primary btn-full" type="submit">＋ Register member</button>
+  </form></section>
+  <section class="panel catalogue-panel"><div class="panel-heading"><div><h3>Member directory</h3><p>All registered members.</p></div></div>
+    <form class="search-form" method="get" action="/members"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search name, email, phone..."><button type="submit">Search</button>{% if q %}<a href="/members" class="clear-link">Clear</a>{% endif %}</form>
+    {% if members %}<div class="table-wrap"><table><thead><tr><th>MEMBER</th><th>JOINED</th><th></th></tr></thead><tbody>{% for member in members %}<tr><td><div class="member-cell"><span class="member-avatar">{{ member.name[:1]|upper }}</span><div><strong>{{ member.name }}</strong><small>{{ member.email }}{% if member.phone %} · {{ member.phone }}{% endif %}</small></div></div></td><td>{{ member.joined_on.strftime('%d %b %Y') }}</td><td><form method="post" action="/members/{{ member.id }}/delete" onsubmit="return confirm('Delete this member?')"><button class="icon-btn" title="Delete member" aria-label="Delete member">×</button></form></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><span>♙</span><strong>No members found</strong><p>Register a member or try a different search.</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}
