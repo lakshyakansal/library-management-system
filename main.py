@@ -23,6 +23,11 @@ if DATABASE_URL.startswith("sqlite"):
 engine = create_engine(DATABASE_URL, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+BASE_DIR = Path(__file__).resolve().parent
+
+templates = Jinja2Templates(
+    directory=str(BASE_DIR / "templates")
+)
 
 class Book(Base):
     __tablename__ = "books"
