@@ -1,7 +1,7 @@
 import os
 from datetime import date
 from urllib.parse import quote
-
+from pathlib import Path
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -60,8 +60,17 @@ app.add_middleware(
     same_site="lax",
     https_only=os.getenv("RENDER", "").lower() == "true",
 )
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = Path(__file__).resolve().parent
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(BASE_DIR / "static")),
+    name="static"
+)
+
+templates = Jinja2Templates(
+    directory=str(BASE_DIR / "templates")
+)
 
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "ChangeMe123!")
