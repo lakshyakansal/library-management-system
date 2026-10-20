@@ -74,3 +74,9 @@ You can also trigger a manual deploy from the Render dashboard.
 - Render's local filesystem is ephemeral for many service configurations. This project uses PostgreSQL when deployed via the included Blueprint so data is stored in the database, not in a local SQLite file.
 - The starter project has one admin login configured through environment variables. It does not include self-registration, password reset, multiple staff accounts, fine-grained roles, or CSRF protection. Add those before using it for sensitive or production workloads.
 - This is an educational starter, not a fully audited production system.
+
+<div align="center">
+
+Developed by Lakshya Kansal
+
+</div>
