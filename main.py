@@ -84,8 +84,17 @@ def require_login(request: Request):
         raise HTTPException(status_code=303, headers={"Location": "/login"})
 
 def page(request: Request, template: str, **context):
-    context.update({"request": request, "app_title": APP_TITLE, "logged_in": bool(request.session.get("logged_in"))})
-    return templates.TemplateResponse(template, context)
+    context.update({
+        "request": request,
+        "app_title": APP_TITLE,
+        "logged_in": bool(request.session.get("logged_in"))
+    })
+
+    return templates.TemplateResponse(
+        request=request,
+        name=template,
+        context=context
+    )
 
 @app.get("/", response_class=HTMLResponse)
 def dashboard(request: Request):
